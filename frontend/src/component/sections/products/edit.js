@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import SendNotification from "../../Functions/SendNotification";
+import {
+  SendNotiToUpdateNumber,
+  SendNotiToUpdateData,
+} from "../../Redux/action";
+import { useSelector, useDispatch } from "react-redux";
 const EditProductForm = ({ id, onEditComplete }) => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
     price: "",
     description: "",
   });
-  console.log(id);
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -16,7 +24,6 @@ const EditProductForm = ({ id, onEditComplete }) => {
           `http://127.0.0.1:8000/api/products/${id}`
         );
         const product = response.data.product;
-        console.log(response.data);
         setFormData({
           name: product.name,
           quantity: product.quantity,
@@ -42,9 +49,21 @@ const EditProductForm = ({ id, onEditComplete }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://127.0.0.1:8000/api/products/${id}`, formData);
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/products/${id}`,
+        formData
+      );
       document.querySelector("#edit_leave").click();
       onEditComplete();
+      const newProductId = response.data.product.id;
+      SendNotification(formData, newProductId, "edit");
+
+      dispatch(
+        SendNotiToUpdateNumber(
+          parseInt(localStorage.getItem("previousNotificationCount")) + 1
+        )
+      );
+
       console.log("Product updated successfully");
     } catch (error) {
       // Handle error, e.g., show an error message

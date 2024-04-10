@@ -141,6 +141,10 @@ Version      : 3.4
 html {
 	height: 100%;
 }
+.notreed{
+  background: #ebe7e7 !important;
+}
+      
 body {
 	font-family: 'CircularStd', sans-serif;
 	font-size: .9375rem;

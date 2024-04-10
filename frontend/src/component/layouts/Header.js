@@ -1,55 +1,66 @@
-import React, { useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+
 import { useQuery } from "react-query";
 import axios from "axios";
+import MakeNotiOpen from "../Functions/MakeNotiOpen";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Link } from "react-router-dom";
-
-// const fetchMovements = async () => {
-//   try {
-//     const response = await axios.get("http://127.0.0.1:8000/api/movements");
-//     console.log(response.data);
-//     return response.data.movements;
-//   } catch (error) {
-//     throw new Error("Network response was not ok");
-//   }
-// };
-
-// export default function () {
-
-//   const {
-//     data: Movements,
-//     isLoading,
-//     error,
-//     refetch,
-//   } = useQuery("Movements", fetchMovements);
-//   const handleRefetch = () => {
-//     refetch();
-//   };
-//   if (isLoading) return <div>Loading...</div>;
-//   if (error) return <div>Error: {error.message}</div>;
-
-// ------------------------------------------------------
-
-const fetchNotifications = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/notifications");
-    console.log(response.data);
-    return response.data.notifications;
-  } catch (error) {
-    throw new Error("Network response was not ok");
-  }
-};
-
 export default function () {
+  const countofNoti = useSelector((state) => state.NotiCount);
+  const [numberOfNotification, SetnumberOfUnOpenNotifications] = useState(1);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/notifications"
+      );
+      let numberOfUnOpenNotifications = 0;
+      response.data.notifications.forEach((notificationt) => {
+        if (notificationt.notification.open === "false") {
+          numberOfUnOpenNotifications++;
+        }
+      });
+
+      localStorage.setItem(
+        "previousNotificationCount",
+        numberOfUnOpenNotifications
+      );
+
+      return response.data.notifications;
+    } catch (error) {
+      throw new Error("Network response was not ok");
+    }
+  };
+
   const {
     data: notifications,
     isLoading,
     error,
     refetch,
   } = useQuery("notifications", fetchNotifications);
-  const handleRefetch = () => {
-    refetch();
-  };
+
+  async function DeleteNotification(id) {
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/api/notifications/${id}`
+      );
+
+      return;
+    } catch (error) {
+      throw new Error("Network response was not ok");
+    }
+  }
+
+  function DeleteAllNotification() {
+    document.querySelector(".notification-list").style.display = "none";
+
+    notifications &&
+      notifications.forEach((noti) => {
+        DeleteNotification(noti.notification.id);
+      });
+  }
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -68,38 +79,39 @@ export default function () {
       <meta name="author" content="Dreamguys - Bootstrap Admin Template" />
       <meta name="robots" content="noindex, nofollow" />
       <title>Clients - HRMS admin template</title>
-      {/* Favicon */}
 
-      {/* Main CSS */}
-      {/* HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries */}
-      {/*[if lt IE 9]>
-			
-			
-		<![endif]*/}
-      {/* Main Wrapper */}
       <div className="main-wrapper"></div>
 
       <div className="header">
         {/* Logo */}
         <div className="header-left">
-          <Link href="index.php" className="logo">
+          <Link to="index.php" className="logo">
             <img src="assets/img/logo.png" width={40} height={40} alt="" />
           </Link>
         </div>
         {/* /Logo */}
-        <Link id="toggle_btn" href="javascript:void(0);">
+        <Link id="toggle_btn" to="javascript:void(0);">
           <span className="bar-icon">
             <span />
             <span />
             <span />
           </span>
+          {numberOfNotification == 0 && (
+            <MakeNotiOpen
+              isOpen={
+                numberOfNotification !==
+                  localStorage.getItem("previousNotificationCount") ||
+                numberOfNotification === 0
+              }
+            />
+          )}
         </Link>
         {/* Header Title */}
         <div className="page-title-box">
           <h3>Dreamguy's Technologies</h3>
         </div>
         {/* /Header Title */}
-        <Link id="mobile_btn" className="mobile_btn" href="#sidebar">
+        <Link id="mobile_btn" className="mobile_btn" to="#sidebar">
           <i className="fa fa-bars" />
         </Link>
         {/* Header Menu */}
@@ -107,7 +119,7 @@ export default function () {
           {/* Search */}
           <li className="nav-item">
             <div className="top-nav-search">
-              <Link href="javascript:void(0);" className="responsive-search">
+              <Link to="javascript:void(0);" className="responsive-search">
                 <i className="fa fa-search" />
               </Link>
               <form action="search.php">
@@ -126,59 +138,79 @@ export default function () {
           {/* Notifications */}
           <li className="nav-item dropdown">
             <Link
-              href="#"
+              to="#"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
+              id="MakeNotiOpen"
+              onClick={(e) => {
+                SetnumberOfUnOpenNotifications(0);
+
+                localStorage.setItem("previousNotificationCount", 0);
+              }}
             >
               <i className="fa fa-bell-o" />{" "}
               <span className="badge badge-pill">
-                {notifications && notifications.length}
+                {notifications &&
+                localStorage.getItem("previousNotificationCount")
+                  ? localStorage.getItem("previousNotificationCount")
+                  : 0}
               </span>
             </Link>
             <div className="dropdown-menu notifications">
               <div className="topnav-dropdown-header">
                 <span className="notification-title">Notifications</span>
-                <Link href="javascript:void(0)" className="clear-noti">
-                  {" "}
-                  Clear All{" "}
+                <Link
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    DeleteAllNotification();
+                  }}
+                  className="clear-noti"
+                >
+                  Clear All
                 </Link>
               </div>
               <div className="noti-content">
                 <ul className="notification-list">
+                  <>{isLoading && <li>loading ......</li>}</>
                   {notifications &&
                     notifications.map((notification) => (
-                      <li className="notification-message">
-                        <Link href="activities.php">
-                          <div className="media">
-                            <span className="avatar">
-                              <img
-                                alt=""
-                                src="assets/img/profiles/avatar-02.jpg"
-                              />
-                            </span>
-                            <div className="media-body">
-                              <p className="noti-details">
-                                <span className="noti-title">
-                                  {notification.user.name}
-                                </span>{" "}
-                                <span className="noti-title">
-                                  {notification.message}
-                                </span>
-                              </p>
-                              <p className="noti-time">
-                                <span className="notification-time">
-                                  4 mins ago
-                                </span>
-                              </p>
+                      <>
+                        <li
+                          className={`notification-message ${notification.notification.status} `}
+                        >
+                          <Link to="activities.php">
+                            <div className="media">
+                              <span className="avatar">
+                                <img
+                                  alt=""
+                                  src="assets/img/profiles/avatar-02.jpg"
+                                />
+                              </span>
+                              <div className="media-body">
+                                <p className="noti-details">
+                                  <span className="noti-title">
+                                    {notification.userName}
+                                  </span>{" "}
+                                  <span className="noti-title">
+                                    {notification.notification.message}
+                                  </span>
+                                </p>
+                                <p className="noti-time">
+                                  <span className="notification-time">
+                                    4 mins ago
+                                  </span>
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </Link>
-                      </li>
+                          </Link>
+                        </li>
+                      </>
                     ))}
                 </ul>
               </div>
               <div className="topnav-dropdown-footer">
-                <Link href="activities.php">View all Notifications</Link>
+                <Link to="activities.php">View all Notifications</Link>
               </div>
             </div>
           </li>
@@ -186,7 +218,7 @@ export default function () {
           {/* Message Notifications */}
           <li className="nav-item dropdown">
             <Link
-              href="#"
+              to="#"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
             >
@@ -196,7 +228,7 @@ export default function () {
             <div className="dropdown-menu notifications">
               <div className="topnav-dropdown-header">
                 <span className="notification-title">Messages</span>
-                <Link href="javascript:void(0)" className="clear-noti">
+                <Link to="javascript:void(0)" className="clear-noti">
                   {" "}
                   Clear All{" "}
                 </Link>
@@ -204,7 +236,7 @@ export default function () {
               <div className="noti-content">
                 <ul className="notification-list">
                   <li className="notification-message">
-                    <Link href="chat.php">
+                    <Link to="chat.php">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -226,7 +258,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link href="chat.php">
+                    <Link to="chat.php">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -248,7 +280,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link href="chat.php">
+                    <Link to="chat.php">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -273,7 +305,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link href="chat.php">
+                    <Link to="chat.php">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -295,7 +327,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link href="chat.php">
+                    <Link to="chat.php">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -322,7 +354,7 @@ export default function () {
                 </ul>
               </div>
               <div className="topnav-dropdown-footer">
-                <Link href="chat.php">View all Messages</Link>
+                <Link to="chat.php">View all Messages</Link>
               </div>
             </div>
           </li>
@@ -330,7 +362,7 @@ export default function () {
 
           <li className="nav-item dropdown has-arrow main-drop">
             <Link
-              href="#"
+              to="#"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
             >
@@ -346,13 +378,13 @@ export default function () {
               </span>
             </Link>
             <div className="dropdown-menu">
-              <Link className="dropdown-item" href="profile.php">
+              <Link className="dropdown-item" to="profile.php">
                 My Profile
               </Link>
-              <Link className="dropdown-item" href="settings.php">
+              <Link className="dropdown-item" to="settings.php">
                 Settings
               </Link>
-              <Link className="dropdown-item" href="logout.php">
+              <Link className="dropdown-item" to="logout.php">
                 Logout
               </Link>
             </div>
@@ -362,7 +394,7 @@ export default function () {
         {/* Mobile Menu */}
         <div className="dropdown mobile-user-menu">
           <Link
-            href="#"
+            to="#"
             className="nav-link dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false"
@@ -370,13 +402,13 @@ export default function () {
             <i className="fa fa-ellipsis-v" />
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link className="dropdown-item" href="profile.php">
+            <Link className="dropdown-item" to="profile.php">
               My Profile
             </Link>
-            <Link className="dropdown-item" href="settings.php">
+            <Link className="dropdown-item" to="settings.php">
               Settings
             </Link>
-            <Link className="dropdown-item" href="login.php">
+            <Link className="dropdown-item" to="login.php">
               Logout
             </Link>
           </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import UserContext from "../../Functions/UserContex";
 import { useQuery } from "react-query";
 import axios from "axios";
 import Add from "./add";
@@ -9,7 +10,7 @@ import { Link } from "react-router-dom";
 const fetchProducts = async () => {
   try {
     const response = await axios.get("http://127.0.0.1:8000/api/products");
-    // console.log(response.data.products[0]);
+
     return response.data.products;
   } catch (error) {
     throw new Error("Network response was not ok");

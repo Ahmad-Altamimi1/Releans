@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
+import SendNotification from "../../Functions/SendNotification";
 
 export default function ({ id, onEditComplete }) {
   const deleteProduct = async () => {
@@ -7,6 +8,10 @@ export default function ({ id, onEditComplete }) {
       const response = await axios.delete(
         `http://127.0.0.1:8000/api/products/${id}`
       );
+      console.log("response", response);
+      const newProductId = response.data.product.id;
+      const formData = response.data.product;
+      SendNotification(formData, newProductId, "delete");
       onEditComplete();
       document.querySelector("#delete_approve").click();
 

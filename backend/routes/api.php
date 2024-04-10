@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('products', ProductController::class);
 Route::apiResource('movements', StockMovementController::class);
 Route::apiResource('notifications', NotificationController::class);
+Route::get('notReednotifications', [NotificationController::class, 'notReednotifications']);

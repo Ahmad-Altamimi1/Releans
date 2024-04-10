@@ -7,9 +7,7 @@
   var dropZone = document.getElementById("drop-zone");
   var uploadForm = document.getElementById("js-upload-form");
 
-  var startUpload = function (files) {
-    console.log(files);
-  };
+  var startUpload = function (files) {};
 
   uploadForm.addEventListener("submit", function (e) {
     var uploadFiles = document.getElementById("js-upload-files").files;

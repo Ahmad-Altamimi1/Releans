@@ -13,8 +13,23 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = Notification::with(['user', 'product'])->get();
+        $notifications = Notification::with(['user:id,name', 'product:id,name'])
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'userName' => $notification->user->name,
+                    'productName' => $notification->product->name,
+                    'notification' => $notification,
+                ];
+            });
         return response()->json(['notifications' => $notifications], 200);
+    }
+    public function notReednotifications()
+    {
+        $notifications = Notification::where('open', '=', 'false')->get();
+        return response()->json(['notReednotifications' => $notifications], 200);
     }
 
     /**
@@ -30,13 +45,13 @@ class NotificationController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $notification = Notification::create($request->all());
 
-        return response()->json(['message' => 'Notification created successfully', 'notification' => $notification], 201);
+        return response()->json([
+            'message' => 'Notification created successfully',
+            'id' => $notification->id
+        ], 201);
     }
-
     /**
      * Display the specified resource.
      */

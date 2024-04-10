@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import SendNotification from "../../Functions/SendNotification";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  SendNotiToUpdateNumber,
+  SendNotiToUpdateData,
+} from "../../Redux/action";
 
 const AddProductForm = () => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
@@ -20,19 +29,22 @@ const AddProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:8000/api/products", formData);
-      // Handle success, e.g., show a success message or redirect the user
-      console.log("Product added successfully");
-      console.log(formData);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/products",
+        formData
+      );
+      dispatch(
+        SendNotiToUpdateNumber(
+          parseInt(localStorage.getItem("previousNotificationCount")) + 1
+        )
+      );
 
-      setFormData({
-        name: "",
-        quantity: "",
-        price: "",
-        description: "",
-      });
+      const newProductId = response.data.product.id;
+      SendNotification(formData, newProductId, "add");
+      console.log("Product added successfully");
+
+      document.querySelector("#add_leave").click();
     } catch (error) {
-      // Handle error, e.g., show an error message
       console.error("Error adding product:", error.message);
     }
   };
