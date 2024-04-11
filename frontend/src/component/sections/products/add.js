@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios";
 import SendNotification from "../../Functions/SendNotification";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -29,10 +29,11 @@ const AddProductForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/products",
-        formData
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      const response = await axios.post("/products", formData);
       dispatch(
         SendNotiToUpdateNumber(
           parseInt(localStorage.getItem("previousNotificationCount")) + 1

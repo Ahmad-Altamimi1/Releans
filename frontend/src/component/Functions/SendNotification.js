@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 
 export default function SendNotification(formData, id, type) {
   let message = "";
@@ -22,10 +22,11 @@ export default function SendNotification(formData, id, type) {
 
   const handleSubmit = async (e) => {
     try {
-      await axios.post(
-        "http://127.0.0.1:8000/api/notifications",
-        formDatanotification
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      await axios.post("/notifications", formDatanotification);
       console.log("notifications added successfully");
     } catch (error) {
       console.error("Error adding notifications:", error.message);

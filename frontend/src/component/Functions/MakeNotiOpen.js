@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
+import axios from "../api/axios";
 
 async function updateNotification(id) {
   try {
-    await axios.put(`http://127.0.0.1:8000/api/notifications/${id}`, {
+    const csrfResponse = await axios.get("/get-csrf-token");
+    const csrfToken = csrfResponse.data.token;
+
+    axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+    await axios.put(`/notifications/${id}`, {
       open: "true",
     });
   } catch (error) {

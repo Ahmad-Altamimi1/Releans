@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import UserContext from "../../Functions/UserContex";
 import { useQuery } from "react-query";
 import axios from "axios";
 import Add from "./add";

@@ -1,7 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 
 import { useQuery } from "react-query";
-import axios from "axios";
+import axios from "../api/axios";
+
 import MakeNotiOpen from "../Functions/MakeNotiOpen";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -12,9 +13,11 @@ export default function () {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/notifications"
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      const response = await axios.get("/notifications");
       let numberOfUnOpenNotifications = 0;
       response.data.notifications.forEach((notificationt) => {
         if (notificationt.notification.open === "false") {
@@ -42,9 +45,11 @@ export default function () {
 
   async function DeleteNotification(id) {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api/notifications/${id}`
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      const response = await axios.delete(`/notifications/${id}`);
 
       return;
     } catch (error) {
@@ -172,7 +177,7 @@ export default function () {
               </div>
               <div className="noti-content">
                 <ul className="notification-list">
-                  <>{isLoading && <li>loading ......</li>}</>
+                  <></>
                   {notifications &&
                     notifications.map((notification) => (
                       <>

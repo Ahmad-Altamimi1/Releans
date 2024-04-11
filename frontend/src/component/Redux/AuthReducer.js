@@ -15,15 +15,7 @@ const authReducer = (state = initialState, action) => {
         NotiCount: action.payload,
         data: true,
       };
-    // case "Send_DtatSUCCESS":
-    //   // Clear user data from local storage
-    //   localStorage.removeItem("user");
 
-    //   return {
-    //     ...state,
-    //     user: null,
-    //     isAuthenticated: false,
-    //   };
     default:
       return state;
   }
