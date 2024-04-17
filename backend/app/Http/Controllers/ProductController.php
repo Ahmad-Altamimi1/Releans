@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('delete', '=', 'false')->get();
 
         return response()->json(['products' => $products], 200);
     }
@@ -35,6 +35,7 @@ class ProductController extends Controller
             'name' => 'required|string',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
+            'MinimumNumberAllowedInstock' => 'required|numeric',
             'quantity' => 'required|integer',
         ]);
 
@@ -85,8 +86,9 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        $product->delete();
 
+        $product->delete = "true";
+        $product->update();
         return response()->json(['message' => 'Product deleted successfully', 'product' => $product], 200);
     }
 }

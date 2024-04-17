@@ -18,7 +18,7 @@ class NotificationFactory extends Factory
     {
         return [
             'userid' => 1,
-            'productId' => $this->faker->randomNumber(1),
+            'productId' => 1,
             'message' => $this->faker->sentence,
 
         ];

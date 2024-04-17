@@ -10,12 +10,14 @@ import {
 
 const AddProductForm = () => {
   const dispatch = useDispatch();
+  const countofNoti = useSelector((state) => state.NotiCount);
 
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
     price: "",
     description: "",
+    MinimumNumberAllowedInstock: "",
   });
 
   const handleChange = (e) => {
@@ -33,17 +35,20 @@ const AddProductForm = () => {
       const csrfToken = csrfResponse.data.token;
 
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      console.log(formData);
       const response = await axios.post("/products", formData);
-      dispatch(
-        SendNotiToUpdateNumber(
-          parseInt(localStorage.getItem("previousNotificationCount")) + 1
-        )
-      );
+      dispatch(SendNotiToUpdateNumber(parseInt(countofNoti) + 1));
 
       const newProductId = response.data.product.id;
       SendNotification(formData, newProductId, "add");
       console.log("Product added successfully");
-
+      setFormData({
+        name: "",
+        quantity: "",
+        price: "",
+        description: "",
+        MinimumNumberAllowedInstock: "",
+      });
       document.querySelector("#add_leave").click();
     } catch (error) {
       console.error("Error adding product:", error.message);
@@ -101,6 +106,19 @@ const AddProductForm = () => {
                   className="form-control"
                   type="number"
                   value={formData.price}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  Minimum number allowed in stock{" "}
+                  <span className="text-danger">*</span>
+                </label>
+                <input
+                  name="MinimumNumberAllowedInstock"
+                  className="form-control"
+                  type="number"
+                  value={formData.MinimumNumberAllowedInstock}
                   onChange={handleChange}
                 />
               </div>

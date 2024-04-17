@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+
+
+
             $table->foreignId('productId')->constrained('products')->onDelete('cascade');
             $table->foreignId('userId')->constrained('users')->onDelete('cascade');
             $table->string('message');
             $table->enum('status', ['reed', 'notreed'])->default('notreed');
             $table->enum('open', ['true', 'false'])->default('false');
+            $table->enum('delete', ['true', 'false'])->default('false');
 
             $table->timestamps();
         });

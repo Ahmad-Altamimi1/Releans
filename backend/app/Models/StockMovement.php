@@ -9,4 +9,13 @@ class StockMovement extends Model
 {
     use HasFactory;
     protected $table = 'stock_movements';
+
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'userId', 'id');
+    // }
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class, 'productId', 'id');
+    // }
 }

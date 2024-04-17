@@ -51,7 +51,7 @@ export default function () {
                 </div>
                 <div className="col-auto float-right ml-auto">
                   <Link
-                    to="#"
+                    to="javascript:void(0)"
                     className="btn add-btn"
                     data-toggle="modal"
                     data-target="#add_leave"
@@ -88,7 +88,7 @@ export default function () {
                               <td className="text-right">
                                 <div className="dropdown dropdown-action">
                                   <Link
-                                    to="#"
+                                    to="javascript:void(0)"
                                     className="action-icon dropdown-toggle"
                                     data-toggle="dropdown"
                                     aria-expanded="false"
@@ -98,7 +98,7 @@ export default function () {
                                   <div className="dropdown-menu dropdown-menu-right">
                                     <Link
                                       className="dropdown-item"
-                                      to="#"
+                                      to="javascript:void(0)"
                                       data-toggle="modal"
                                       data-target="#edit_leave"
                                       data-id={product.id}
@@ -110,7 +110,7 @@ export default function () {
                                     </Link>
                                     <Link
                                       className="dropdown-item"
-                                      to="#"
+                                      to="javascript:void(0)"
                                       data-toggle="modal"
                                       data-target="#delete_approve"
                                       onClick={() => {

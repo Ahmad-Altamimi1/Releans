@@ -62,7 +62,7 @@ Route::post('reset-password', [NewPasswordController::class, 'store'])
     ->name('password.store');
 // });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

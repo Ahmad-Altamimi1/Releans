@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'price', 'quantity',
+        'name', 'description', 'price', 'quantity', 'MinimumNumberAllowedInstock'
     ];
     public function notification()
     {

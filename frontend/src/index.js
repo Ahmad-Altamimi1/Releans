@@ -6,6 +6,7 @@ import { store } from "./component/Redux/store";
 import "./index.css";
 import Product from "./component/pages/products";
 import Login from "./component/pages/login";
+import StockMovements from "./component/pages/stockMovements";
 import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 
@@ -19,6 +20,7 @@ root.render(
         <Routes>
           <Route path="/products" element={<Product />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/stockMovements" element={<StockMovements />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
