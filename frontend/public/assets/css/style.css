@@ -2137,6 +2137,24 @@ table.dataTable thead > tr > td.sorting {
 	border: 1px solid #ff9b44;
 	color: #fff;
 }
+.delete-btn {
+    background-color: #fff;
+    border: 1px solid #ff0000;
+    border-radius: 50px;
+    color: #ff0000;
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 20px;
+    text-align: center;
+}
+.delete-btn:hover,
+.delete-btn:focus,
+.delete-btn:active {
+	background-color: #ff0000;
+	border: 1px solid #ff0000;
+	color: #fff;
+}
 
 /*-----------------
 	18. Edit Profile
@@ -3333,6 +3351,23 @@ table.dataTable thead > tr > td.sorting {
 	border-color: #ff9b44;
     color: #fff;
 }
+.edit-delete-icon {
+    background-color: #eee;
+    border: 1px solid #e3e3e3;
+    border-radius: 24px;
+    color: #bbb;
+    float: right;
+    font-size: 12px;
+    line-height: 24px;
+    min-height: 26px;
+    text-align: center;
+    width: 26px;
+}
+.edit-delete-icon:hover {
+	background-color: #e30b0b;
+	border-color: #e30b0b;
+    color: #fff;
+}
 .delete-icon {
     color: #e30b0b;
     float: right;
@@ -4312,7 +4347,6 @@ html.menu-opened body {
 }
 .task-header .assignee-info {
     align-items: center;
-    border: 1px solid transparent;
     border-radius: 10px;
     display: inline-flex;
     flex: 0 1 180px;

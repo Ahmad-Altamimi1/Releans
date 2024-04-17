@@ -32,8 +32,8 @@ export default function ({ id, onEditComplete }) {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>Delete Leave</h3>
-                <p>Are you sure want to delete this leave?</p>
+                <h3>Delete Product</h3>
+                <p>Are you sure want to delete this Product?</p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">

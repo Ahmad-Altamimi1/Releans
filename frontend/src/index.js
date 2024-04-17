@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { store } from "./component/Redux/store";
 import "./index.css";
 import Product from "./component/pages/products";
+import SingleProduct from "./component/pages/singleProduct";
 import Login from "./component/pages/login";
 import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
@@ -19,6 +20,7 @@ root.render(
         <Routes>
           <Route path="/products" element={<Product />} />
           <Route path="/login" element={<Login />} />
+          <Route path={"/products/:id"} element={<SingleProduct />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

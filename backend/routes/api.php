@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::apiResource('images', ImageController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('movements', StockMovementController::class);
 Route::apiResource('notifications', NotificationController::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Image;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -49,7 +50,9 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        return response()->json(['product' => $product], 200);
+        $images = Image::where('product_id', $id)->get();
+
+        return response()->json(['product' => $product, 'images' => $images], 200);
     }
 
     /**

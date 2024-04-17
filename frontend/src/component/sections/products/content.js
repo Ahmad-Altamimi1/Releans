@@ -96,6 +96,13 @@ export default function () {
                                     <i className="material-icons">more_vert</i>
                                   </Link>
                                   <div className="dropdown-menu dropdown-menu-right">
+                                  <Link
+                                      className="dropdown-item"
+                                      to={`/products/${product.id}`}
+                                    >
+                                      <i className="fa fa-eye m-r-5" />{" "}
+                                      More Info
+                                    </Link>
                                     <Link
                                       className="dropdown-item"
                                       to="#"
