@@ -19,6 +19,7 @@ class StockMovementFactory extends Factory
         return [
             'movement_type' => "addition",
             'productId' => 1,
+            'userId' => 1,
             'quantity' => $this->faker->randomNumber(2),
         ];
     }

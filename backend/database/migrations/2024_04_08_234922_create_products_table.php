@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
-            $table->integer('quantity')->default(0);
+            $table->unsignedBigInteger('quantity')->default(0);
+            $table->unsignedBigInteger('MinimumNumberAllowedInstock')->default(0);
+            $table->enum('delete', ['true', 'false'])->default('false');
+
             $table->timestamps();
         });
     }

@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios";
 import SendNotification from "../../Functions/SendNotification";
-
+import {
+  SendNotiToUpdateNumber,
+  SendNotiToUpdateData,
+} from "../../Redux/action";
 export default function ({ id, onEditComplete }) {
   const deleteProduct = async () => {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api/products/${id}`
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      const response = await axios.delete(`/products/${id}`);
       console.log("response", response);
       const newProductId = response.data.product.id;
       const formData = response.data.product;

@@ -19,9 +19,7 @@ async function updateNotification(id) {
 
 const fetchNotifications = async () => {
   try {
-    const response = await axios.get(
-      "http://127.0.0.1:8000/api/notReednotifications"
-    );
+    const response = await axios.get("notReednotifications");
     return response.data.notReednotifications;
   } catch (error) {
     throw new Error("Network response was not ok");

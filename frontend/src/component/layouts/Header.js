@@ -2,15 +2,14 @@ import React, { createContext, useEffect, useState } from "react";
 
 import { useQuery } from "react-query";
 import axios from "../api/axios";
-
+import { SendNotiToUpdateNumber, SendNotiToUpdateData } from "../Redux/action";
 import MakeNotiOpen from "../Functions/MakeNotiOpen";
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
 export default function () {
+  const dispatch = useDispatch();
   const countofNoti = useSelector((state) => state.NotiCount);
   const [numberOfNotification, SetnumberOfUnOpenNotifications] = useState(1);
-
   const fetchNotifications = async () => {
     try {
       const csrfResponse = await axios.get("/get-csrf-token");
@@ -25,10 +24,7 @@ export default function () {
         }
       });
 
-      localStorage.setItem(
-        "previousNotificationCount",
-        numberOfUnOpenNotifications
-      );
+      dispatch(SendNotiToUpdateNumber(parseInt(countofNoti)));
 
       return response.data.notifications;
     } catch (error) {
@@ -42,6 +38,10 @@ export default function () {
     error,
     refetch,
   } = useQuery("notifications", fetchNotifications);
+
+  useEffect(() => {
+    refetch();
+  }, [countofNoti]);
 
   async function DeleteNotification(id) {
     try {
@@ -65,10 +65,10 @@ export default function () {
         DeleteNotification(noti.notification.id);
       });
   }
+  console.log("top");
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-
   return (
     <>
       <meta charSet="utf-8" />
@@ -143,23 +143,18 @@ export default function () {
           {/* Notifications */}
           <li className="nav-item dropdown">
             <Link
-              to="#"
+              to="javascript:void(0)"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
               id="MakeNotiOpen"
               onClick={(e) => {
-                SetnumberOfUnOpenNotifications(0);
-
-                localStorage.setItem("previousNotificationCount", 0);
+                console.log("cliked");
+                e.preventDefault();
+                dispatch(SendNotiToUpdateNumber(0));
               }}
             >
-              <i className="fa fa-bell-o" />{" "}
-              <span className="badge badge-pill">
-                {notifications &&
-                localStorage.getItem("previousNotificationCount")
-                  ? localStorage.getItem("previousNotificationCount")
-                  : 0}
-              </span>
+              <i className="fa fa-bell-o" />
+              <span className="badge badge-pill">{countofNoti}</span>
             </Link>
             <div className="dropdown-menu notifications">
               <div className="topnav-dropdown-header">
@@ -184,7 +179,7 @@ export default function () {
                         <li
                           className={`notification-message ${notification.notification.status} `}
                         >
-                          <Link to="activities.php">
+                          <Link to="javascript:void(0)">
                             <div className="media">
                               <span className="avatar">
                                 <img
@@ -215,7 +210,7 @@ export default function () {
                 </ul>
               </div>
               <div className="topnav-dropdown-footer">
-                <Link to="activities.php">View all Notifications</Link>
+                <Link to="javascript:void(0)">View all Notifications</Link>
               </div>
             </div>
           </li>
@@ -223,7 +218,7 @@ export default function () {
           {/* Message Notifications */}
           <li className="nav-item dropdown">
             <Link
-              to="#"
+              to="javascript:void(0)"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
             >
@@ -241,7 +236,14 @@ export default function () {
               <div className="noti-content">
                 <ul className="notification-list">
                   <li className="notification-message">
-                    <Link to="chat.php">
+                    <Link
+                      to="javascript:void(0)"
+                      onClick={(e) => {
+                        console.log("cliked");
+                        e.preventDefault();
+                        dispatch(SendNotiToUpdateNumber(0));
+                      }}
+                    >
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -263,7 +265,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link to="chat.php">
+                    <Link to="javascript:void(0)">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -285,7 +287,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link to="chat.php">
+                    <Link to="javascript:void(0)">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -310,7 +312,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link to="chat.php">
+                    <Link to="javascript:void(0)">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -332,7 +334,7 @@ export default function () {
                     </Link>
                   </li>
                   <li className="notification-message">
-                    <Link to="chat.php">
+                    <Link to="javascript:void(0)">
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">
@@ -359,7 +361,7 @@ export default function () {
                 </ul>
               </div>
               <div className="topnav-dropdown-footer">
-                <Link to="chat.php">View all Messages</Link>
+                <Link to="javascript:void(0)">View all Messages</Link>
               </div>
             </div>
           </li>
@@ -367,7 +369,7 @@ export default function () {
 
           <li className="nav-item dropdown has-arrow main-drop">
             <Link
-              to="#"
+              to="javascript:void(0)"
               className="dropdown-toggle nav-link"
               data-toggle="dropdown"
             >
@@ -383,13 +385,13 @@ export default function () {
               </span>
             </Link>
             <div className="dropdown-menu">
-              <Link className="dropdown-item" to="profile.php">
+              <Link className="dropdown-item" to="javascript:void(0)">
                 My Profile
               </Link>
-              <Link className="dropdown-item" to="settings.php">
+              <Link className="dropdown-item" to="javascript:void(0)">
                 Settings
               </Link>
-              <Link className="dropdown-item" to="logout.php">
+              <Link className="dropdown-item" to="javascript:void(0)">
                 Logout
               </Link>
             </div>
@@ -399,7 +401,7 @@ export default function () {
         {/* Mobile Menu */}
         <div className="dropdown mobile-user-menu">
           <Link
-            to="#"
+            to="javascript:void(0)"
             className="nav-link dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false"
@@ -407,10 +409,10 @@ export default function () {
             <i className="fa fa-ellipsis-v" />
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link className="dropdown-item" to="profile.php">
+            <Link className="dropdown-item" to="javascript:void(0)">
               My Profile
             </Link>
-            <Link className="dropdown-item" to="settings.php">
+            <Link className="dropdown-item" to="javascript:void(0)">
               Settings
             </Link>
             <Link className="dropdown-item" to="login.php">

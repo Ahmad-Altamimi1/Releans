@@ -13,7 +13,20 @@ class StockMovementController extends Controller
      */
     public function index()
     {
-        $movements = StockMovement::all();
+        // $movements = StockMovement::all();
+        $movements = StockMovement::join('users', 'stock_movements.userId', '=', 'users.id')
+            ->join('products', 'stock_movements.productId', '=', 'products.id')
+            ->select('users.name as userName', 'products.name as productName', 'stock_movements.*')
+            ->get()
+            ->map(function ($movement) {
+                return [
+                    'userName' => $movement->userName,
+                    'productName' => $movement->productName,
+                    'movement' => $movement,
+                ];
+            });
+
+
         return response()->json(['movements' => $movements], 200);
     }
 

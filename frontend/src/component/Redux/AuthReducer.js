@@ -1,7 +1,6 @@
 // authReducer.js
 const initialState = {
-  NotiCount:
-    JSON.parse(localStorage.getItem("previousNotificationCount")) || null,
+  NotiCount: localStorage.getItem("previousNotificationCount") || 0,
   data: !!localStorage.getItem("previousNotificationCount"),
 };
 
