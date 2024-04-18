@@ -1,4 +1,24 @@
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 export default function () {
+  const navigate = useNavigate();
+  const handleLogout = async (e) => {
+    try {
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+      const response = await axios.post("/logout");
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="sidebar" id="sidebar">
@@ -9,16 +29,16 @@ export default function () {
                 <span>Main</span>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-dashboard" /> <span> Dashboard</span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="index.php">Admin Dashboard</a>
+                    <Link to="index.php">Admin Dashboard</Link>
                   </li>
                   <li>
-                    <a href="employee-dashboard.php">Employee Dashboard</a>
+                    <Link to="employee-dashboard.php">Employee Dashboard</Link>
                   </li>
                 </ul>
               </li>
@@ -26,184 +46,188 @@ export default function () {
                 <span>Employees</span>
               </li>
               <li className="submenu">
-                <a href="#" className="noti-dot">
+                <Link to="#" className="noti-dot">
                   <i className="la la-user" /> <span> Employees</span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="employees.php">All Employees</a>
+                    <Link to="employees.php">All Employees</Link>
                   </li>
                   <li>
-                    <a href="holidays.php">Holidays</a>
+                    <Link to="holidays.php">Holidays</Link>
                   </li>
                   <li>
-                    <a href="leaves-employee.php">Employee Leave</a>
+                    <Link to="leaves-employee.php">Employee Leave</Link>
                   </li>
                   <li>
-                    <a href="departments.php">Departments</a>
+                    <Link to="departments.php">Departments</Link>
                   </li>
                   <li>
-                    <a href="designations.php">Designations</a>
+                    <Link to="designations.php">Designations</Link>
                   </li>
                   <li>
-                    <a href="timesheet.php">Timesheet</a>
+                    <Link to="timesheet.php">Timesheet</Link>
                   </li>
                   <li>
-                    <a href="overtime.php">Overtime</a>
+                    <Link to="overtime.php">Overtime</Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="clients.php">
+                <Link to="clients.php">
                   <i className="la la-users" /> <span>Clients</span>
-                </a>
+                </Link>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-rocket" /> <span> Projects</span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="projects.php">Projects</a>
+                    <Link to="projects.php">Projects</Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="leads.php">
+                <Link to="leads.php">
                   <i className="la la-user-secret" /> <span>Leads</span>
-                </a>
+                </Link>
               </li>
               <li className="menu-title">
                 <span>HR</span>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-files-o" /> <span> Accounts </span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="invoices.php">Invoices</a>
+                    <Link to="invoices.php">Invoices</Link>
                   </li>
                   <li>
-                    <a href="payments.php">Payments</a>
+                    <Link to="payments.php">Payments</Link>
                   </li>
                   <li>
-                    <a href="expenses.php">Expenses</a>
+                    <Link to="expenses.php">Expenses</Link>
                   </li>
                   <li>
-                    <a href="provident-fund.php">Provident Fund</a>
+                    <Link to="provident-fund.php">Provident Fund</Link>
                   </li>
                   <li>
-                    <a href="taxes.php">Taxes</a>
+                    <Link to="taxes.php">Taxes</Link>
                   </li>
                 </ul>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-money" /> <span> Payroll </span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="salary.php"> Employee Salary </a>
+                    <Link to="salary.php"> Employee Salary </Link>
                   </li>
                   <li>
-                    <a href="salary-view.php"> Payslip </a>
+                    <Link to="salary-view.php"> Payslip </Link>
                   </li>
                   <li>
-                    <a href="payroll-items.php"> Payroll Items </a>
+                    <Link to="payroll-items.php"> Payroll Items </Link>
                   </li>
                 </ul>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-crosshairs" /> <span> Goals </span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="goal-tracking.php"> Goal List </a>
+                    <Link to="goal-tracking.php"> Goal List </Link>
                   </li>
                   <li>
-                    <a href="goal-type.php"> Goal Type </a>
+                    <Link to="goal-type.php"> Goal Type </Link>
                   </li>
                 </ul>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-edit" /> <span> Training </span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="training.php"> Training List </a>
+                    <Link to="training.php"> Training List </Link>
                   </li>
                   <li>
-                    <a href="trainers.php"> Trainers</a>
+                    <Link to="trainers.php"> Trainers</Link>
                   </li>
                   <li>
-                    <a href="training-type.php"> Training Type </a>
+                    <Link to="training-type.php"> Training Type </Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="promotion.php">
+                <Link to="promotion.php">
                   <i className="la la-bullhorn" /> <span>Promotion</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="resignation.php">
+                <Link to="resignation.php">
                   <i className="la la-external-link-square" />{" "}
                   <span>Resignation</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="termination.php">
+                <Link to="termination.php">
                   <i className="la la-times-circle" /> <span>Termination</span>
-                </a>
+                </Link>
               </li>
               <li className="menu-title">
                 <span>Administration</span>
               </li>
               <li>
-                <a href="assets.php">
+                <Link to="assets.php">
                   <i className="la la-object-ungroup" /> <span>Assets</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="users.php">
+                <Link to="users.php">
                   <i className="la la-user-plus" /> <span>Users</span>
-                </a>
+                </Link>
               </li>
               <li className="menu-title">
                 <span>Pages</span>
               </li>
               <li className="submenu">
-                <a href="#">
+                <Link to="#">
                   <i className="la la-user" /> <span> Profile </span>{" "}
                   <span className="menu-arrow" />
-                </a>
+                </Link>
                 <ul style={{ display: "none" }}>
                   <li>
-                    <a href="profile.php"> Employee Profile </a>
+                    <Link to="profile.php"> Employee Profile </Link>
                   </li>
                   <li>
-                    <a href="client-profile.php"> Client Profile </a>
+                    <Link to="client-profile.php"> Client Profile </Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="settings.php">
+                <Link to="settings.php">
                   <i className="la la-cogs" /> <span>Settings</span>
-                </a>
+                </Link>
               </li>
-              <li>
-                <a href="logout.php">
+              <li
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+                <Link>
                   <i className="la la-power-off" /> <span>Logout</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

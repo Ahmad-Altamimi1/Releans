@@ -77,6 +77,7 @@ export default function () {
                         <th>Description</th>
                         <th>Price</th>
                         <th>Quantity</th>
+                        <th>Minimum Number Allowed In stock</th>
                         <th className="text-right">Actions</th>
                       </tr>
                     </thead>
@@ -85,11 +86,12 @@ export default function () {
                       {products &&
                         products.map((product) => (
                           <>
-                            <tr>
+                            <tr key={product.id}>
                               <td>{product.name}</td>
                               <td>{product.description}</td>
                               <td>{product.price}</td>
                               <td>{product.quantity}</td>
+                              <td>{product.MinimumNumberAllowedInstock}</td>
                               <td className="text-right">
                                 <div className="dropdown dropdown-action">
                                   <Link

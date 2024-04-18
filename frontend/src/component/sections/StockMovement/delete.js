@@ -12,9 +12,9 @@ export default function ({ id, onEditComplete }) {
       const csrfToken = csrfResponse.data.token;
 
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
-      const response = await axios.delete(`/products/${id}`);
-      console.log("response", response);
-      const newProductId = response.data.product.id;
+      const response = await axios.delete(`/movements/${id}`);
+
+      const newProductId = response.data.productId;
       const formData = response.data.product;
       SendNotification(formData, newProductId, "delete");
       onEditComplete();

@@ -81,7 +81,7 @@ export default function () {
                       {Movements &&
                         Movements.map((Movement) => (
                           <>
-                            <tr>
+                            <tr key={Movement.id}>
                               <td>{Movement.movement.movement_type}</td>
                               <td>{Movement.userName}</td>
                               <td>{Movement.productName}</td>
@@ -104,7 +104,6 @@ export default function () {
                                       data-target="#edit_Move"
                                       data-id={Movement.movement.id}
                                       onClick={() => {
-                                        console.log("clicked");
                                         seteditStock(Movement.movement.id);
                                       }}
                                     >

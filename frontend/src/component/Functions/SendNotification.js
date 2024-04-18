@@ -80,9 +80,6 @@ export default function SendNotification(
     case "delete":
       message = ` has been deleted "${formData.name}" Product.`;
       break;
-    case "delete":
-      message = ` has been deleted "${formData.name}" Product.`;
-      break;
 
     case "editMovment":
       function compareObjectstomovment(OldData, formData) {
@@ -106,7 +103,7 @@ export default function SendNotification(
       } else {
         message = false;
       }
-      // message = ` has been edited "${formData.name}" Product .`;
+
       break;
   }
   const formDatanotification = {

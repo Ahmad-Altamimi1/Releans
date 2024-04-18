@@ -42,7 +42,6 @@ export default function () {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  console.log(singleProduct);
   return (
     <>
       <div className="page-wrapper">
@@ -124,8 +123,6 @@ export default function () {
                           <i className="fa fa-camera" />
                         </a>
                       </h3>
-
-                      {/* --- img map start ---- */}
 
                       {singleProduct.images.length > 0 ? (
                         singleProduct.images.map((image, index) => (

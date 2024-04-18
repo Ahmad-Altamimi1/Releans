@@ -54,7 +54,6 @@ const EditProductForm = ({ id, onEditComplete }) => {
         axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
         const response = await axios.get(`/movements/${id}`);
         const movment = response.data.Movement;
-        console.log(movment, "movmentmovmentmovmentmovment");
         setOldData({
           movement_type: movment.movement_type,
           quantity: movment.quantity,
@@ -88,7 +87,6 @@ const EditProductForm = ({ id, onEditComplete }) => {
       const response = await axios.put(`/movements/${id}`, formData);
       document.querySelector("#edit_Move").click();
       onEditComplete();
-      console.log("response.dataresponse.dataresponse.data", response.data);
       const newProductId = response.data.movement.productId;
       SendNotification(formData, newProductId, "editMovment", OldData);
 

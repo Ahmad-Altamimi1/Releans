@@ -10,7 +10,7 @@ class StockMovement extends Model
     use HasFactory;
     protected $table = 'stock_movements';
     protected $fillable = [
-        'movement_type', "userId", 'productId', 'quantity'
+        'movement_type', "userId", 'productId', 'quantity', 'movNo'
     ];
     // public function user()
     // {

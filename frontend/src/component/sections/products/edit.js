@@ -16,12 +16,14 @@ const EditProductForm = ({ id, onEditComplete }) => {
     quantity: "",
     price: "",
     description: "",
+    MinimumNumberAllowedInstock: "",
   });
   const [OldData, setOldData] = useState({
     name: "",
     quantity: "",
     price: "",
     description: "",
+    MinimumNumberAllowedInstock: "",
   });
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const EditProductForm = ({ id, onEditComplete }) => {
           quantity: product.quantity,
           price: product.price,
           description: product.description,
+          MinimumNumberAllowedInstock: product.MinimumNumberAllowedInstock,
         });
       } catch (error) {
         console.error("Error fetching product:", error.message);
@@ -124,8 +127,22 @@ const EditProductForm = ({ id, onEditComplete }) => {
                 <input
                   name="quantity"
                   className="form-control"
-                  type="number"
+                  type="text"
                   value={formData.quantity}
+                  onChange={handleChange}
+                  readOnly
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  Minimum Number Allowed In stock{" "}
+                  <span className="text-danger">*</span>
+                </label>
+                <input
+                  name="MinimumNumberAllowedInstock"
+                  className="form-control"
+                  type="number"
+                  value={formData.MinimumNumberAllowedInstock}
                   onChange={handleChange}
                 />
               </div>

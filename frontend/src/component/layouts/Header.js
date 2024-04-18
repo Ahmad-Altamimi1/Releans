@@ -43,6 +43,11 @@ export default function () {
     refetch();
   }, [countofNoti]);
 
+  function handenoti(e) {
+    e.preventDefault();
+    refetch();
+    dispatch(SendNotiToUpdateNumber(0));
+  }
   async function DeleteNotification(id) {
     try {
       const csrfResponse = await axios.get("/get-csrf-token");
@@ -176,6 +181,7 @@ export default function () {
                     notifications.map((notification) => (
                       <>
                         <li
+                          key={notification.notification.id}
                           className={`notification-message ${notification.notification.status} `}
                         >
                           <Link to="javascript:void(0)">
@@ -234,15 +240,8 @@ export default function () {
               </div>
               <div className="noti-content">
                 <ul className="notification-list">
-                  <li className="notification-message">
-                    <Link
-                      to="javascript:void(0)"
-                      onClick={(e) => {
-                        console.log("cliked");
-                        e.preventDefault();
-                        dispatch(SendNotiToUpdateNumber(0));
-                      }}
-                    >
+                  <li className="notification-message" onClick={handenoti}>
+                    <Link>
                       <div className="list-item">
                         <div className="list-left">
                           <span className="avatar">

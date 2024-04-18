@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('userId');
             // $table->foreignId('productId')->constrained('products')->onDelete('cascade');
             $table->integer('quantity');
+            $table->string('movNo')->default('');
             $table->enum('movement_type', ['addition', 'deduction']);
             $table->timestamps();
         });

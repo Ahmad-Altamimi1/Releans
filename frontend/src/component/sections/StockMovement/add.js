@@ -8,6 +8,26 @@ import {
   SendNotiToUpdateNumber,
   SendNotiToUpdateData,
 } from "../../Redux/action";
+
+const fetchSingleProduct = async (id) => {
+  const accessToken = sessionStorage.getItem("token");
+
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/products/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return response.data.product;
+  } catch (error) {
+    throw new Error("Network response was not ok");
+  }
+};
+
 const fetchProducts = async () => {
   const accessToken = sessionStorage.getItem("token");
 
@@ -23,29 +43,44 @@ const fetchProducts = async () => {
     throw new Error("Network response was not ok");
   }
 };
-const AddMovementForm = () => {
+const AddMovementForm = ({ onEditComplete }) => {
+  const [warning, setwarning] = useState("");
+
   const dispatch = useDispatch();
   const countofNoti = useSelector((state) => state.NotiCount);
   const {
     data: products,
     isLoading,
     error,
-    refetch,
   } = useQuery("products", fetchProducts);
 
   const [formData, setFormData] = useState({
     movement_type: "",
-    quantity: "",
+    quantity: 0,
     productId: "",
-    // userId: "",
   });
-  console.log(formData);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    console.log(formData);
+    if (formData.movement_type == "deduction" && formData.productId) {
+      const Singleproduct = fetchSingleProduct(formData.productId);
+
+      if (
+        Singleproduct.quantity - formData.quantity <
+        Singleproduct.MinimumNumberAllowedInstock
+      ) {
+        setwarning(
+          `The max quantity to deduction is ${
+            Singleproduct.quantity - formData.quantity
+          }  `
+        );
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -67,9 +102,9 @@ const AddMovementForm = () => {
         movement_type: "",
         quantity: "",
         productId: "",
-        // userId: userid,
       });
       document.querySelector("#add_Movment").click();
+      // onEditComplete();
     } catch (error) {
       console.error("Error adding Movement:", error.message);
     }
@@ -99,7 +134,8 @@ const AddMovementForm = () => {
                 </label>
                 <select
                   name="movement_type"
-                  className="form-control"
+                  className="form-control "
+                  id="movettype"
                   type="text"
                   value={formData.movement_type}
                   onChange={handleChange}
@@ -141,6 +177,7 @@ const AddMovementForm = () => {
                   value={formData.quantity}
                   onChange={handleChange}
                 />
+                <div>{warning}</div>
               </div>
 
               <div className="submit-section">

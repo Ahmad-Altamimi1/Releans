@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class StockMovementController extends Controller
 {
@@ -62,6 +63,9 @@ class StockMovementController extends Controller
 
         $request_data = $request->all();
         $request_data['userId'] = $user_id;
+        $yearMonth = Carbon::now()->format('Ym');
+        $movementNumber = 'PRO' . $yearMonth . $request_data['quantity'];
+        $request_data['movNo'] = $movementNumber;
 
         $movement = StockMovement::create($request_data);
         $Product = Product::findOrfail($movement->productId);
