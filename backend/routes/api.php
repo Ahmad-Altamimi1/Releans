@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,6 +39,9 @@ Route::group([
     Route::get('notReednotifications', [NotificationController::class, 'notReednotifications']);
 });
 Route::apiResource('movements', StockMovementController::class);
+
+Route::apiResource('orders', OrderController::class);
+
 
 
 // Auth 

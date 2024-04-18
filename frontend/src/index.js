@@ -33,6 +33,10 @@ root.render(
               accessToken ? <StockMovements /> : <Navigate to="/login" />
             }
           />
+          <Route
+            path="/orders"
+            element={accessToken ? <Orders /> : <Orders />}
+          />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

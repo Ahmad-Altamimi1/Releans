@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "../../api/axios";
 import { useDispatch } from "react-redux";
 
-const ImageUploadForm = ({ id, onEditComplete }) => {
+const ImageUploadForm = ({ id ,onEditComplete }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
