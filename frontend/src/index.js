@@ -10,6 +10,7 @@ import Login from "./component/pages/login";
 import StockMovements from "./component/pages/stockMovements";
 import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
+import Orders from "./component/pages/orders"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
@@ -22,7 +23,7 @@ root.render(
         <Routes>
           <Route
             path="/products"
-            element={accessToken ? <Product /> : <Navigate to="/login" />}
+            element={<Product />}
           />
           <Route
             path="/login"
@@ -37,6 +38,10 @@ root.render(
             element={
               accessToken ? <StockMovements /> : <Navigate to="/login" />
             }
+          />
+          <Route
+            path="/orders"
+            element={accessToken ? <Orders /> : <Orders />}
           />
         </Routes>
       </BrowserRouter>

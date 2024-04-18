@@ -11,7 +11,7 @@ const fetchMovements = async () => {
   try {
     const response = await axios.get(`/movements`);
 
-    return response.data.movements;
+    return response.data.movements; 
   } catch (error) {
     throw new Error("Network response was not ok");
   }
