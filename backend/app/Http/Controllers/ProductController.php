@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Image;
+use App\Models\Notification;
+use App\Models\OrderItem;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -52,9 +54,15 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $images = Image::where('product_id', $id)->get();
-
-        return response()->json(['product' => $product, 'images' => $images], 200);
+        $orders = OrderItem::where('productId', $id)->get();
+        $notifications = Notification::where('productId', $id)
+                            ->join('users', 'notifications.userId', '=', 'users.id')
+                            ->select('notifications.*', 'users.name as userName')
+                            ->get();
+    
+        return response()->json(['product' => $product, 'images' => $images, 'notifications' => $notifications, 'orders' => $orders], 200);
     }
+    
 
     /**
      * Show the form for editing the specified resource.

@@ -1,20 +1,17 @@
 import { Link } from "react-router-dom";
-import axios from "axios";
-import SendNotification from "../../Functions/SendNotification";
+import axios from "../../api/axios";
 
 export default function ({ id, onEditComplete }) {
+
   const deleteImage = async () => {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api//${id}`
-      );
+      const csrfResponse = await axios.get("/get-csrf-token");
+      const csrfToken = csrfResponse.data.token;
+      axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      const response = await axios.delete(`/images/${id}`);
       console.log("response", response);
-      const newProductId = response.data.product.id;
-      const formData = response.data.product;
-      SendNotification(formData, newProductId, "delete");
       onEditComplete();
       document.querySelector("#delete_approve").click();
-
       return response.data;
     } catch (error) {
       throw new Error("Network response was not ok");

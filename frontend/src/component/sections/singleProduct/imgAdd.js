@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "../../api/axios";
 import { useDispatch } from "react-redux";
 
-const ImageUploadForm = ({ id }) => {
+const ImageUploadForm = ({ id ,onEditComplete }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -31,7 +31,13 @@ const ImageUploadForm = ({ id }) => {
 
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
       await axios.post("/images", formData);
-
+      
+      onEditComplete();
+      const Preview = document.querySelector('#Preview');
+      const imageInput = document.querySelector('#add-product-image-input');
+      Preview.src= '';
+      imageInput.value= '';
+      
       console.log("Image uploaded successfully");
     } catch (error) {
       console.error("Error uploading image:", error.message);
@@ -62,6 +68,7 @@ const ImageUploadForm = ({ id }) => {
                 <input
                   className="form-control"
                   type="file"
+                  id="add-product-image-input"
                   accept="image/*"
                   onChange={handleImageChange}
                   required
@@ -69,7 +76,7 @@ const ImageUploadForm = ({ id }) => {
               </div>
               {previewUrl && (
                 <div className="form-group">
-                  <img src={previewUrl} alt="Preview" className="img-fluid" />
+                  <img id="Preview" src={previewUrl} alt="Preview" className="img-fluid" />
                 </div>
               )}
               <div className="submit-section">

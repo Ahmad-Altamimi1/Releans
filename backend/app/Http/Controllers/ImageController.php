@@ -35,13 +35,6 @@ class ImageController extends Controller
             'product_id' => 'required|exists:products,id', // Validate the product ID
         ]);
         
-
-        // Handle image upload
-        // if ($request->hasFile('image')) {
-        //     $image = $request->file('image');
-        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
-        //     $image->move(public_path('images'), $imageName);
-        // }
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
@@ -85,21 +78,21 @@ class ImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Image $image)
+    public function destroy($id)
     {
-        //
+        $image = Image::findOrFail($id);
+
+        $image->delete();
+        
+        return response()->json(['message' => 'Product deleted successfully'], 200);
     }
-
-    // public function getImagesForProduct($productId)
+    // public function destroy(Image $image)
     // {
-    //     $product = Product::find($productId);
+    //     $image = Image::findOrFail($image);
 
-    //     if (!$product) {
-    //         return response()->json(['error' => 'Product not found'], 404);
-    //     }
-
-    //     $images = Image::where('product_id', $productId)->get();
-
-    //     return response()->json(['images' => $images], 200);
+    //     $image->delete();
+        
+    //     return response()->json(['message' => 'Product deleted successfully'], 200);
     // }
+
 }
