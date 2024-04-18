@@ -31,13 +31,14 @@ const ImageUploadForm = ({ id ,onEditComplete }) => {
 
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
       await axios.post("/images", formData);
-      
+
+      document.querySelector("#edit-icon").click();
       onEditComplete();
-      const Preview = document.querySelector('#Preview');
-      const imageInput = document.querySelector('#add-product-image-input');
-      Preview.src= '';
-      imageInput.value= '';
-      
+
+      const imagefiled = document.querySelector("#imagefiled");
+      const Preview = document.querySelector("#Preview");
+      imagefiled.value = "";
+      Preview.src = "";
       console.log("Image uploaded successfully");
     } catch (error) {
       console.error("Error uploading image:", error.message);
@@ -45,7 +46,11 @@ const ImageUploadForm = ({ id ,onEditComplete }) => {
   };
 
   return (
-    <div id="add-product-image" className="modal custom-modal fade" role="dialog">
+    <div
+      id="add-product-image"
+      className="modal custom-modal fade"
+      role="dialog"
+    >
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
@@ -68,7 +73,7 @@ const ImageUploadForm = ({ id ,onEditComplete }) => {
                 <input
                   className="form-control"
                   type="file"
-                  id="add-product-image-input"
+                  id="imagefiled"
                   accept="image/*"
                   onChange={handleImageChange}
                   required
@@ -76,7 +81,12 @@ const ImageUploadForm = ({ id ,onEditComplete }) => {
               </div>
               {previewUrl && (
                 <div className="form-group">
-                  <img id="Preview" src={previewUrl} alt="Preview" className="img-fluid" />
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="img-fluid"
+                    id="Preview"
+                  />
                 </div>
               )}
               <div className="submit-section">

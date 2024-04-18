@@ -23,9 +23,12 @@ export default function () {
 
       Setemail("");
       Setpassword("");
-      navigate("/products");
 
-      console.log("", response);
+      console.log("responseresponseresponse", response.data.token);
+      sessionStorage.setItem("token", response.data.token);
+      console.log(response.data.user);
+      sessionStorage.setItem("user", response.data.user);
+      navigate("/products");
     } catch (error) {
       console.log(error);
     }

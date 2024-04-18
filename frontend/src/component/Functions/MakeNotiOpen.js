@@ -35,7 +35,6 @@ const MakeNotiOpen = ({ isOpen }) => {
 
   useEffect(() => {
     if (openotifications && openotifications.length > 0) {
-      // Iterate through notifications and update their status
       openotifications.forEach((notification) => {
         updateNotification(notification.id);
       });

@@ -7,15 +7,22 @@ import ImageUploadForm from "./imgAdd";
 import ImageDeleteForm from "./imgDelete";
 import { Link, useParams } from "react-router-dom";
 
-
 export default function () {
+  const accessToken = sessionStorage.getItem("token");
 
   const [deleteImage, setdeleteImage] = useState(false);
 
   const { id } = useParams();
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/products/${id}`);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/products/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       return response.data;
     } catch (error) {
@@ -59,18 +66,12 @@ export default function () {
           <div className="page-header">
             <div className="row">
               <div className="col-sm-12">
-                <h3 className="page-title">
-                  product
-                </h3>
+                <h3 className="page-title">product</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
-                    <a href="index.php">
-                      Dashboard
-                    </a>
+                    <a href="index.php">Dashboard</a>
                   </li>
-                  <li className="breadcrumb-item active">
-                    product
-                  </li>
+                  <li className="breadcrumb-item active">product</li>
                 </ul>
               </div>
             </div>
@@ -86,10 +87,10 @@ export default function () {
                       data-toggle="tab"
                       href="#emp_Product"
                     >
-                      {' '}Product Information{' '}
+                      {" "}
+                      Product Information{" "}
                     </a>
                   </li>
-
                   <li className="nav-item">
                     <a
                       className="nav-link"
@@ -108,7 +109,6 @@ export default function () {
           </div>
 
           {/* --------------------------------------------------- Product Information start----------------------------------------------------------- */}
-
 
           <div className="tab-content">
             <div
@@ -154,19 +154,17 @@ export default function () {
                   <div className="card profile-box flex-fill">
                     <div className="card-body">
                       <h3 className="card-title">
-                        Product Images{' '}
+                        Product Images{" "}
                         <a
                           className="edit-icon"
                           data-target="#add-product-image"
                           data-toggle="modal"
+                          id="edit-icon"
                           href="#"
                         >
                           <i className="fa fa-camera" />
                         </a>
                       </h3>
-
-
-
 
                       {/* --- img map start ---- */}
 
@@ -223,7 +221,7 @@ export default function () {
                   <div className="card profile-box flex-fill">
                     <div className="card-body">
                       <h3 className="card-title">
-                        Product Information{' '}
+                        Product Information{" "}
                         <a
                           className="edit-delete-icon mx-1"
                           data-target="#delete_approve"
@@ -232,7 +230,6 @@ export default function () {
                         >
                           <i className="fa fa-trash-o" />
                         </a>
-
                         <a
                           className="edit-icon"
                           data-target="#edit_leave"
@@ -241,31 +238,24 @@ export default function () {
                         >
                           <i className="fa fa-pencil" />
                         </a>
-
                       </h3>
 
                       <ul className="personal-info">
                         <li>
-                          <div className="title">
-                            ID:
-                          </div>
+                          <div className="title">ID:</div>
                           <div className="text">
                             {singleProduct.product.id}
                             {singleProduct.product.id}
                           </div>
                         </li>
                         <li>
-                          <div className="title">
-                            Name:
-                          </div>
+                          <div className="title">Name:</div>
                           <div className="text">
                             {singleProduct.product.name}
                           </div>
                         </li>
                         <li>
-                          <div className="title">
-                            Description:
-                          </div>
+                          <div className="title">Description:</div>
                           <div className="text">
                             {singleProduct.product.description}
                           </div>
@@ -275,36 +265,26 @@ export default function () {
 
                       <ul className="personal-info">
                         <li>
-                          <div className="title">
-                            Price:
-                          </div>
+                          <div className="title">Price:</div>
                           <div className="text">
                             {singleProduct.product.price}$
                           </div>
                         </li>
                         <li>
-                          <div className="title">
-                            Quantity:
-                          </div>
+                          <div className="title">Quantity:</div>
                           <div className="text">
                             {singleProduct.product.quantity}
                           </div>
                         </li>
                         <li>
-                          <div className="title">
-                            Added In:{' '}
-                          </div>
+                          <div className="title">Added In: </div>
                           <div className="text">
                             {formatDate(singleProduct.product.created_at)}
                           </div>
                         </li>
                         <li>
-                          <div className="title">
-                            Number Of Interested:{' '}
-                          </div>
-                          <div className="text">
-                            #####
-                          </div>
+                          <div className="title">Number Of Interested: </div>
+                          <div className="text">#####</div>
                         </li>
                       </ul>
                     </div>
@@ -317,11 +297,7 @@ export default function () {
 
             {/* --------------------------------------------------- Stock History start----------------------------------------------------------- */}
 
-
-            <div
-              className="tab-pane fade"
-              id="bank_statutory"
-            >
+            <div className="tab-pane fade" id="bank_statutory">
               <div className="card">
                 <div className="card-body">
                   <h3 className="card-title">

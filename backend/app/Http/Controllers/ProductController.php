@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Image;
 use App\Models\Notification;
 use App\Models\OrderItem;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Image;
 
 class ProductController extends Controller
 {

@@ -1,15 +1,15 @@
 import React, { useState, useContext } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
+import axios from "../../api/axios";
 import Add from "./add";
-import Edit from "./edit";
 import Delete from "./delete";
+import EditProductForm from "./editStockMovement";
 import { Link } from "react-router-dom";
 
 const fetchMovements = async () => {
-  const baseUrl = "http://127.0.0.1:8000/api";
+  // const baseUrl = "http://127.0.0.1:8000/api";
   try {
-    const response = await axios.get(`${baseUrl}/movements`);
+    const response = await axios.get(`/movements`);
 
     return response.data.movements;
   } catch (error) {
@@ -18,7 +18,7 @@ const fetchMovements = async () => {
 };
 
 export default function () {
-  const [editpage, seteditpage] = useState(false);
+  const [editStock, seteditStock] = useState(false);
   const [deletePage, setdeletePage] = useState(false);
   const {
     data: Movements,
@@ -55,7 +55,7 @@ export default function () {
                     to="javascript:void(0)"
                     className="btn add-btn"
                     data-toggle="modal"
-                    data-target="#add_leave"
+                    data-target="#add_Movment"
                   >
                     <i className="fa fa-plus" /> Add Movement
                   </Link>
@@ -101,13 +101,19 @@ export default function () {
                                       className="dropdown-item"
                                       to="javascript:void(0)"
                                       data-toggle="modal"
-                                      data-target="#edit_leave"
-                                      data-id={Movement.id}
+                                      data-target="#edit_Move"
+                                      data-id={Movement.movement.id}
                                       onClick={() => {
-                                        seteditpage(Movement.id);
+                                        console.log("clicked");
+                                        seteditStock(Movement.movement.id);
                                       }}
                                     >
-                                      <i className="fa fa-pencil m-r-5" /> Edit
+                                      <i
+                                        className="fa fa-pencil m-r-5"
+                                        data-toggle="modal"
+                                        data-target="#edit_Move"
+                                      />{" "}
+                                      Edit
                                     </Link>
                                     <Link
                                       className="dropdown-item"
@@ -115,7 +121,7 @@ export default function () {
                                       data-toggle="modal"
                                       data-target="#delete_approve"
                                       onClick={() => {
-                                        setdeletePage(Movement.id);
+                                        setdeletePage(Movement.movement.id);
                                       }}
                                     >
                                       <i className="fa fa-trash-o m-r-5" />{" "}
@@ -141,9 +147,11 @@ export default function () {
           {/* /Delete Leave Modal */}
         </div>
       </>
-      <Add />
-      {editpage && <Edit id={editpage} onEditComplete={handleRefetch} />}
+      {editStock && (
+        <EditProductForm id={editStock} onEditComplete={handleRefetch} />
+      )}
       {deletePage && <Delete id={deletePage} onEditComplete={handleRefetch} />}
+      <Add />
     </>
   );
 }

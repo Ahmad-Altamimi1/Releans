@@ -7,8 +7,13 @@ import Delete from "./delete";
 import { Link } from "react-router-dom";
 
 const fetchProducts = async () => {
+  const accessToken = sessionStorage.getItem("token");
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/products");
+    const response = await axios.get("http://127.0.0.1:8000/api/products", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     return response.data.products;
   } catch (error) {
@@ -96,12 +101,12 @@ export default function () {
                                     <i className="material-icons">more_vert</i>
                                   </Link>
                                   <div className="dropdown-menu dropdown-menu-right">
-                                  <Link
+                                    <Link
                                       className="dropdown-item"
                                       to={`/products/${product.id}`}
                                     >
-                                      <i className="fa fa-eye m-r-5" />{" "}
-                                      More Info
+                                      <i className="fa fa-eye m-r-5" /> More
+                                      Info
                                     </Link>
                                     <Link
                                       className="dropdown-item"
@@ -147,7 +152,7 @@ export default function () {
           {/* /Delete Leave Modal */}
         </div>
       </>
-      <Add />
+      <Add onEditComplete={handleRefetch} />
       {editpage && <Edit id={editpage} onEditComplete={handleRefetch} />}
       {deletePage && <Delete id={deletePage} onEditComplete={handleRefetch} />}
     </>

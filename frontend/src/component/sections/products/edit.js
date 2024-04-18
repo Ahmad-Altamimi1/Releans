@@ -69,10 +69,17 @@ const EditProductForm = ({ id, onEditComplete }) => {
       document.querySelector("#edit_leave").click();
       onEditComplete();
       const newProductId = response.data.product.id;
-      SendNotification(formData, newProductId, "edit", OldData);
 
-      dispatch(SendNotiToUpdateNumber(parseInt(countofNoti) + 1));
+      const notificationResult = SendNotification(
+        formData,
+        newProductId,
+        "edit",
+        OldData
+      );
 
+      if (notificationResult) {
+        dispatch(SendNotiToUpdateNumber(parseInt(countofNoti) + 1));
+      }
       console.log("Product updated successfully");
     } catch (error) {
       // Handle error, e.g., show an error message

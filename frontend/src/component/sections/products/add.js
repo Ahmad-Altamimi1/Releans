@@ -8,7 +8,7 @@ import {
   SendNotiToUpdateData,
 } from "../../Redux/action";
 
-const AddProductForm = () => {
+const AddProductForm = ({ onEditComplete }) => {
   const dispatch = useDispatch();
   const countofNoti = useSelector((state) => state.NotiCount);
 
@@ -41,6 +41,7 @@ const AddProductForm = () => {
 
       const newProductId = response.data.product.id;
       SendNotification(formData, newProductId, "add");
+      onEditComplete();
       console.log("Product added successfully");
       setFormData({
         name: "",
