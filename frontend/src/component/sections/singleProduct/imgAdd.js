@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "../../api/axios";
 import { useDispatch } from "react-redux";
 
-const ImageUploadForm = ({ id }) => {
+const ImageUploadForm = ({ id, onEditComplete }) => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -32,6 +32,13 @@ const ImageUploadForm = ({ id }) => {
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
       await axios.post("/images", formData);
 
+      document.querySelector("#edit-icon").click();
+      onEditComplete();
+
+      const imagefiled = document.querySelector("#imagefiled");
+      const Preview = document.querySelector("#Preview");
+      imagefiled.value = "";
+      Preview.src = "";
       console.log("Image uploaded successfully");
     } catch (error) {
       console.error("Error uploading image:", error.message);
@@ -39,7 +46,11 @@ const ImageUploadForm = ({ id }) => {
   };
 
   return (
-    <div id="add-product-image" className="modal custom-modal fade" role="dialog">
+    <div
+      id="add-product-image"
+      className="modal custom-modal fade"
+      role="dialog"
+    >
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
@@ -62,6 +73,7 @@ const ImageUploadForm = ({ id }) => {
                 <input
                   className="form-control"
                   type="file"
+                  id="imagefiled"
                   accept="image/*"
                   onChange={handleImageChange}
                   required
@@ -69,7 +81,12 @@ const ImageUploadForm = ({ id }) => {
               </div>
               {previewUrl && (
                 <div className="form-group">
-                  <img src={previewUrl} alt="Preview" className="img-fluid" />
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="img-fluid"
+                    id="Preview"
+                  />
                 </div>
               )}
               <div className="submit-section">

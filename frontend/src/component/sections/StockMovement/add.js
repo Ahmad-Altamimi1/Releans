@@ -2,27 +2,49 @@ import React, { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import SendNotification from "../../Functions/SendNotification";
 import { useSelector, useDispatch } from "react-redux";
+import { useQuery } from "react-query";
 
 import {
   SendNotiToUpdateNumber,
   SendNotiToUpdateData,
 } from "../../Redux/action";
+const fetchProducts = async () => {
+  const accessToken = sessionStorage.getItem("token");
 
+  try {
+    const response = await axios.get("/products", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    return response.data.products;
+  } catch (error) {
+    throw new Error("Network response was not ok");
+  }
+};
 const AddMovementForm = () => {
   const dispatch = useDispatch();
   const countofNoti = useSelector((state) => state.NotiCount);
+  const {
+    data: products,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery("products", fetchProducts);
 
   const [formData, setFormData] = useState({
     movement_type: "",
     quantity: "",
-    price: "",
+    productId: "",
+    // userId: "",
   });
-
+  console.log(formData);
   const handleChange = (e) => {
-    const { movement_type, value } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [movement_type]: value,
+      [name]: value,
     });
   };
 
@@ -33,28 +55,29 @@ const AddMovementForm = () => {
       const csrfToken = csrfResponse.data.token;
 
       axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
-      console.log(formData);
+
       const response = await axios.post("/movements", formData);
       dispatch(SendNotiToUpdateNumber(parseInt(countofNoti) + 1));
 
-      const newMovementId = response.data.Movement.id;
-      SendNotification(formData, newMovementId, "add");
+      const Username = response.data.Movement.productId;
+      const newMovementType = response.data.Movement.type;
+      SendNotification(formData, Username, "addMove", formData, Username);
       console.log("Movement added successfully");
       setFormData({
-        productId: "",
+        movement_type: "",
         quantity: "",
-        price: "",
-        description: "",
-        MinimumNumberAllowedInstock: "",
+        productId: "",
+        // userId: userid,
       });
-      document.querySelector("#add_leave").click();
+      document.querySelector("#add_Movment").click();
     } catch (error) {
       console.error("Error adding Movement:", error.message);
     }
   };
-
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   return (
-    <div id="add_leave" className="modal custom-modal fade" role="dialog">
+    <div id="add_Movment" className="modal custom-modal fade" role="dialog">
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
@@ -74,13 +97,37 @@ const AddMovementForm = () => {
                 <label>
                   Movement Name <span className="text-danger">*</span>
                 </label>
-                <input
-                  name="name"
+                <select
+                  name="movement_type"
                   className="form-control"
                   type="text"
                   value={formData.movement_type}
                   onChange={handleChange}
-                />
+                >
+                  <option value="">--------</option>
+                  <option value="deduction">Deduction</option>
+                  <option value="addition">Addition</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>
+                  Product Name <span className="text-danger">*</span>
+                </label>
+                <select
+                  name="productId"
+                  className="form-control"
+                  type="text"
+                  value={formData.productId}
+                  onChange={handleChange}
+                >
+                  <option value="">--------</option>
+
+                  {products.map((product) => (
+                    <>
+                      <option value={product.id}>{product.name}</option>
+                    </>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">
@@ -95,43 +142,7 @@ const AddMovementForm = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group">
-                <label>
-                  Price <span className="text-danger">*</span>
-                </label>
-                <input
-                  name="price"
-                  className="form-control"
-                  type="number"
-                  value={formData.price}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>
-                  Minimum number allowed in stock{" "}
-                  <span className="text-danger">*</span>
-                </label>
-                <input
-                  name="MinimumNumberAllowedInstock"
-                  className="form-control"
-                  type="number"
-                  value={formData.MinimumNumberAllowedInstock}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>
-                  Description <span className="text-danger">*</span>
-                </label>
-                <textarea
-                  name="description"
-                  rows={4}
-                  className="form-control"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              </div>
+
               <div className="submit-section">
                 <button
                   type="submit"

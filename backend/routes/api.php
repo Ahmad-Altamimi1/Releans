@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\ImageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,19 +26,27 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::group([
+    "middleware" => ["auth:api"]
+], function () {
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('notifications', NotificationController::class);
+    Route::apiResource('images', ImageController::class);
+    Route::get('notReednotifications', [NotificationController::class, 'notReednotifications']);
 });
-Route::apiResource('images', ImageController::class);
-Route::apiResource('products', ProductController::class);
 Route::apiResource('movements', StockMovementController::class);
-Route::apiResource('notifications', NotificationController::class);
-Route::get('notReednotifications', [NotificationController::class, 'notReednotifications']);
+
 
 // Auth 
 Route::get('/get-csrf-token', function () {
     return response()->json(['token' => csrf_token()]);
 })->middleware('cors');
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 // Route::middleware('guest')->group(function () {
 Route::get('register', [RegisteredUserController::class, 'create'])

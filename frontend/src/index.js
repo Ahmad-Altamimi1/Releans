@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { store } from "./component/Redux/store";
 import "./index.css";
@@ -13,16 +13,31 @@ import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
+const accessToken = sessionStorage.getItem("token");
 
 root.render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/products" element={<Product />} />
-          <Route path="/login" element={<Login />} />
-          <Route path={"/products/:id"} element={<SingleProduct />} />
-          <Route path="/stockMovements" element={<StockMovements />} />
+          <Route
+            path="/products"
+            element={accessToken ? <Product /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/login"
+            element={!accessToken ? <Login /> : <Navigate to="/products" />}
+          />
+          <Route
+            path={"/products/:id"}
+            element={accessToken ? <SingleProduct /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/stockMovements"
+            element={
+              accessToken ? <StockMovements /> : <Navigate to="/login" />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('quantity')->default(0);
             $table->unsignedBigInteger('MinimumNumberAllowedInstock')->default(0);
             $table->enum('delete', ['true', 'false'])->default('false');
-
             $table->timestamps();
         });
     }

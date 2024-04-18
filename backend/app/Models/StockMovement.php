@@ -9,7 +9,9 @@ class StockMovement extends Model
 {
     use HasFactory;
     protected $table = 'stock_movements';
-
+    protected $fillable = [
+        'movement_type', "userId", 'productId', 'quantity'
+    ];
     // public function user()
     // {
     //     return $this->belongsTo(User::class, 'userId', 'id');

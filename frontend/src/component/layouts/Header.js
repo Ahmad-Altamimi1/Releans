@@ -65,7 +65,6 @@ export default function () {
         DeleteNotification(noti.notification.id);
       });
   }
-  console.log("top");
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -148,7 +147,7 @@ export default function () {
               data-toggle="dropdown"
               id="MakeNotiOpen"
               onClick={(e) => {
-                console.log("cliked");
+                // SetnumberOfUnOpenNotifications(0)
                 e.preventDefault();
                 dispatch(SendNotiToUpdateNumber(0));
               }}

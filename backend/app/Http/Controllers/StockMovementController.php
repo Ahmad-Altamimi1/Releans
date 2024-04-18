@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\StockMovement;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class StockMovementController extends Controller
 {
@@ -43,21 +47,44 @@ class StockMovementController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            // Validation rules
-        ]);
+        $rules = [
+            'productId' => 'required', // You might want to adjust this rule based on your application requirements
+            'quantity' => 'required|integer|min:1',
+            'movement_type' => 'required|in:addition,deduction',
+        ];
 
-        $movement = StockMovement::create($request->all());
+        $validator = Validator::make($request->all(), $rules);
 
-        return response()->json(['message' => 'Movement created successfully', 'movement' => $movement], 201);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+        $user_id = Auth::user()->id;
+
+        $request_data = $request->all();
+        $request_data['userId'] = $user_id;
+
+        $movement = StockMovement::create($request_data);
+        $Product = Product::findOrfail($movement->productId);
+        if ($request_data['movement_type'] == 'addition') {
+
+            $Product->quantity += $request_data['quantity'];
+            $Product->save();
+        } else {
+            $Product->quantity -= $request_data['quantity'];
+            $Product->save();
+        }
+
+
+        return response()->json(['message' => 'Movement created successfully', 'Movement' => $movement], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(StockMovement $stockMovement)
+    public function show($id)
     {
-        //
+        $movement = StockMovement::findOrfail($id);
+        return response()->json(['Movement' => $movement], 201);
     }
 
     /**
@@ -78,9 +105,22 @@ class StockMovementController extends Controller
         $request->validate([
             // Validation rules
         ]);
-
+        $userId = Auth::user()->id;
+        $request['userId'] = $userId;
         $movement->update($request->all());
 
+        $Product = Product::findOrfail($movement->id);
+        $totalquantity = 0;
+        foreach (StockMovement::where('productId', '=', $Product->id) as $key => $value) {
+            if ($value->movement_type == 'addition') {
+                $totalquantity += $value->quantity;
+            } else {
+                $totalquantity -= $value->quantity;
+            }
+        }
+
+        $Product->quantity = $totalquantity;
+        $Product->save();
         return response()->json(['message' => 'Movement updated successfully', 'movement' => $movement], 200);
     }
 
@@ -90,8 +130,21 @@ class StockMovementController extends Controller
     public function destroy($id)
     {
         $movement = StockMovement::findOrFail($id);
-        $movement->delete();
+        $Product = Product::findOrfail($movement->id);
 
+        $movement->delete();
+        $totalquantity = 0;
+
+        foreach (StockMovement::where('productId', '=', $Product->id) as $key => $value) {
+            if ($value->movement_type == 'addition') {
+                $totalquantity += $value->quantity;
+            } else {
+                $totalquantity -= $value->quantity;
+            }
+        }
+
+        $Product->quantity = $totalquantity;
+        $Product->save();
         return response()->json(['message' => 'Movement deleted successfully'], 200);
     }
 }
